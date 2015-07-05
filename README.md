@@ -4,3 +4,4 @@ A Collection of software for Amateur Pulsar Detection
 Takes rtlsdr .bin files, applies averaging and folding algorithm in blocks. Outputs text file of folded average.
 
 Command format:- rapulsar2 <infile> <outfile> <clock rate(MHz)) <No. output data points> <Pulsar period(ms)>*/
+compile example: gcc RAPULSAR2.C -o RAPULSAR2 -lm -D_FILE_OFFSET_BITS=64 -Wall
