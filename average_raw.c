@@ -23,6 +23,7 @@ long double dat1=0.0;
 long double dat2=0.0;
 long double smt=0.0;
 long long int division=0;
+float aux3=0.0;
 
 /*check command line arguments*/
 if(argc !=4)
@@ -56,7 +57,9 @@ for(aux=0;aux<file_end-1;aux+=2)
 			{
 				aux2=0;
 				smt=(smt/division);
-				fwrite( &smt, 1, sizeof(smt), fpto ) ;
+				aux3=(float)smt;
+				fwrite( &aux3, 1, sizeof(aux3), fpto ) ;
+				//printf("%Lf		%f\n",smt,aux3);
 				smt=0.0;
 			}
 	}
