@@ -15,9 +15,9 @@ int PTS;
 long long int file_end,p_num;
 long double dats[16384],clck;
 double periodf,dt,res,tim;
-long double smt,sumt[16384];
+long double sumt[16384];
 unsigned char ucha;
-
+float smt=0.0;
 
 FILE *fptr;
 FILE *fpto;
@@ -31,7 +31,6 @@ int main(int argc,char *argv[])
 
 long long int ss;
 int s;
-long int tt=0;
 
 
 /*check command line arguments*/
@@ -49,9 +48,7 @@ clck=1/atof(argv[3]);
 PTS=atoi(argv[4]);
 periodf = atof(argv[5]);
 dt=periodf/(double)PTS;
-                                        /*printf("PTS=%d   periodf =%ld\n",PTS,periodf);*/
-
-
+ 
 /*find length of input file*/
 fseeko(fptr,0L,SEEK_END);
 file_end=(long long int)(ftello(fptr));
@@ -75,41 +72,25 @@ fptr=fopen(argv[1],"rb");
 
     for(s=0;s<PTS;s++)
         {
-        //ucha=getc(fptr);
-        //smt=(float)ucha+0.0;
-        fread(&smt, sizeof(long double), 1, fptr);
-        //dats[s]=(float)ucha+0.0;
-        //dats[s]=(dats[s]-127.5)/128.0;
-
-        //ucha=getc(fptr);
-        //dats[s+1]=(float)ucha+0.0;
-        //dats[s+1]=(dats[s+1]-127.5)/128.0;
-
-        //smt=dats[s]*dats[s]+dats[s+1]*dats[s+1];
-
+        fread(&smt, sizeof(float), 1, fptr);
         tim=(double)(s+(ss*PTS));
         res=(double)clck/(dt*(double)1000.0);
         res=(double)tim*(double)res;
         tim=(long long int)res%(long long int)PTS;
 
-        sumt[(int)tim]=sumt[(int)tim]+smt;
+        sumt[(int)tim]=sumt[(int)tim]+(long double)smt;
         count[(int)tim]=count[(int)tim]+1;
 		coun=coun+1;
-		//printf("%Lf    %Lf   %Ld	%Lf\n",smt,sumt[(int)tim],count[(int)tim],sumt[(int)tim]/count[(int)tim]);
-        //printf("%20.20Lf  \n",smt);
         }
     }
 
  }
 
 printf("No. bins=%d  Count/bin=%lld\n",PTS,count[(int)tim]);
-
 fpto = fopen(argv[2],"w");
 out_dat();
-
 fclose(fptr);
 fclose(fpto);
-
 printf("\nInfile=%s    Outfile=%s   End bin=%d   coun=%lld\n",argv[1],argv[2],(int)tim,coun);
 exit(0);
 }
@@ -122,8 +103,6 @@ long int tt;
 
 for(tt=0;tt<PTS;tt++)
     {
-//printf("%ld    %3.5Lf   %lld\n",(tt),((long double)sumt[tt]/(long double)count[tt]),count[tt]);
 fprintf(fpto,"%ld    %Lf   %Ld\n",(tt),(sumt[tt]/count[tt]),count[tt]);
-
-    }/*printf("%d\n",tt);*/
+    }
 }
